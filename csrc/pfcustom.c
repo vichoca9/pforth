@@ -30,7 +30,8 @@
 
 
 #include "pf_all.h"
-
+#include <time.h>
+static cell_t Utime(void);
 static cell_t CTest0( cell_t Val );
 static void CTest1( cell_t Val1, cell_t Val2 );
 
@@ -51,6 +52,9 @@ static void CTest1( cell_t Val1, cell_t Val2 )
     MSG_NUM_D(", Val2 = ", Val2);
 }
 
+static cell_t Utime(void){
+	return (cell_t)(clock());
+}
 /****************************************************************
 ** Step 2: Create CustomFunctionTable.
 **     Do not change the name of CustomFunctionTable!
@@ -65,13 +69,14 @@ static void CTest1( cell_t Val1, cell_t Val2 )
 ** Do not change the name of LoadCustomFunctionTable()!
 ** It is called by the pForth kernel.
 */
-#define NUM_CUSTOM_FUNCTIONS  (2)
+#define NUM_CUSTOM_FUNCTIONS  (3)
 CFunc0 CustomFunctionTable[NUM_CUSTOM_FUNCTIONS];
 
 Err LoadCustomFunctionTable( void )
 {
     CustomFunctionTable[0] = CTest0;
     CustomFunctionTable[1] = CTest1;
+    CustomFunctionTable[2] = Utime;
     return 0;
 }
 
@@ -83,7 +88,8 @@ Err LoadCustomFunctionTable( void )
 CFunc0 CustomFunctionTable[] =
 {
     (CFunc0) CTest0,
-    (CFunc0) CTest1
+    (CFunc0) CTest1,
+    (CFunc0) Utime
 };
 #endif
 
@@ -105,6 +111,8 @@ Err CompileCustomFunctions( void )
     err = CreateGlueToC( "CTEST0", i++, C_RETURNS_VALUE, 1 );
     if( err < 0 ) return err;
     err = CreateGlueToC( "CTEST1", i++, C_RETURNS_VOID, 2 );
+    if( err < 0 ) return err;
+    err = CreateGlueToC( "UTIME", i++, C_RETURNS_VALUE, 0 );
     if( err < 0 ) return err;
 
     return 0;

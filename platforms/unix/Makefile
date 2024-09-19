@@ -8,7 +8,7 @@
 .POSIX:
 
 UNAME := $(shell uname -s)
-
+CC=clang
 # Options include: PF_SUPPORT_FP PF_NO_MALLOC PF_NO_INIT PF_DEBUG
 # See "docs/pf_ref.htm" file for more info.
 
@@ -24,7 +24,7 @@ PFDICDAT     = pfdicdat.h
 PFORTHAPP    = pforth_standalone
 
 # Set this parameter to -m32 if you want to compile a 32-bit binary.
-WIDTHOPT=
+WIDTHOPT=-Os
 
 FULL_WARNINGS =  \
         --std=c89 \
@@ -40,7 +40,7 @@ FULL_WARNINGS =  \
         -Wmissing-declarations
 
 DEBUGOPTS = -g
-CCOPTS = $(WIDTHOPT) -x c -O2 $(FULL_WARNINGS) $(EXTRA_CCOPTS) $(DEBUGOPTS)
+CCOPTS = $(WIDTHOPT) -x c -Os $(FULL_WARNINGS) $(EXTRA_CCOPTS) $(DEBUGOPTS)
 
 IO_SOURCE = pf_io_posix.c pf_fileio_stdio.c
 #IO_SOURCE = pf_io_stdio.c
